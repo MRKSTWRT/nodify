@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='https://cdn.shopify.com/s/assets/external/app.js')
+    script.
+      ShopifyApp.init({
+        apiKey: '#{config.app.apiKey}',
+        shopOrigin: 'https://#{shop}',
+        debug: true
+      });
+
+      ShopifyApp.ready(function(){
+        ShopifyApp.Bar.initialize({
+          icon: 'http://localhost:3001/assets/header-icon.png',
+          title: 'Dashboard',
+          /*buttons: {
+            primary: {
+              label: 'Save',
+              message: 'save',
+              callback: function(){
+                ShopifyApp.Bar.loadingOn();
+                doSomeCustomAction();
+              }
+            }
+          }*/
+        });
+      });
+  body
+    block content
