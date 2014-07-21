@@ -23,7 +23,8 @@ var routes = {
   esciframe: require('./routes/escapeiframe'),
   authapp: require('./routes/authapp'),
   finishauth: require('./routes/finishauth'),
-  uninstall: require('./routes/uninstall')
+  uninstall: require('./routes/uninstall'),
+  checksig: require('./routes/checksig')
 };
 
 var app = express();
@@ -58,6 +59,7 @@ app.use(function(req, res, next) {
 });
 
 //Routes to use
+app.use('*', routes.checksig);
 app.use('/check', routes.check);
 app.use('/esc', routes.esciframe);
 app.use('/authapp', routes.authapp);
