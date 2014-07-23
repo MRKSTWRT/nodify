@@ -26,9 +26,11 @@ router.get('/', function(req, res, next) {
       if (signature === req.query.signature) {
         next();
       } else {
+        res.status(403);
         res.render('noentry', {config: config});
       }
     } else {
+      res.status(403);
       res.render('noentry', {config: config});
     }
   }
