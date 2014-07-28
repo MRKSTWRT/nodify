@@ -17,13 +17,16 @@ router.get('/', function(req, res) {
 
     if (!error) {
       req.session.token = data['access_token'];
-
-      req.db.query('SELECT * FROM shops WHERE token = "' + req.session.token + '"', function(error, rows) {
+      req.knex.select('*')
+      .from('shops')
+      .where('token', '=', req.session.token)
+      .exec(function(error, rows) {
         if (!error) {
-          if (!rows[0]) {
-            req.db.query('INSERT INTO shops (shop,token) VALUES ("' + req.session.shop + '","' + req.session.token + '")', function(e, r) {
+          if(!rows[0]) {
+            req.knex.insert({shop: req.session.shop, token: req.session.token})
+            .into('shops')
+            .exec(function(error, rows) {
               if (!error) {
-
                 var postData = {
                   "webhook": {
                     "topic": "app/uninstalled",
@@ -31,25 +34,20 @@ router.get('/', function(req, res) {
                     "format": "json"
                   }
                 };
-
                 shopify.post('/admin/webhooks.json', postData, function(error, data, headers) {
                   res.redirect('/render');
                 });
-              } else {
-                console.log(error);
               }
             });
           } else {
+            req.session.shopId = rows[0].id;
             res.redirect('/render');
           }
         } else {
           console.log(error);
         }
       });
-    } else {
-      console.log(error);
     }
-
   });
 });
 

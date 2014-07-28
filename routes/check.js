@@ -6,7 +6,10 @@ router.get('/', function(req, res) {
     req.session.shop = req.query.shop;
     res.redirect('/esc');
   } else {
-    req.db.query("SELECT * FROM shops WHERE token = '" + req.session.token + "'", function(error, rows) {
+    req.knex.select('*')
+    .from('shops')
+    .where('token', '=', req.session.token)
+    .exec(function(error, rows) {
       if (!error) {
         if (!rows[0]) {
           req.session.token = null;

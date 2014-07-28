@@ -17,6 +17,7 @@
     "shopify-node-api": "*",
     "mysql": "*",
     "MD5": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "knex": "*"
   }
 }

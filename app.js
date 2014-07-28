@@ -9,12 +9,15 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var config = require('./config');
 
-var db = mysql.createConnection({
-  host: config.db.host,
-  user: config.db.user,
-  password: config.db.pass
+var knex = require('knex')({
+  client: 'mysql',
+  connection: {
+    host: config.db.host,
+    user: config.db.user,
+    password: config.db.pass,
+    database: config.db.name
+  }
 });
-db.query("USE " + config.db.name);
 
 //Define routes
 var routes = {
@@ -54,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Make db accessible to router
 app.use(function(req, res, next) {
-  req.db = db
+  req.knex = knex;
   next();
 });
 
