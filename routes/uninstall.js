@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
+var config = require('../config');
 
 router.post('/', function(req, res) {
-  var hash = crypto.createHmac("SHA256", '36f0694f9b9f70ee36184900dc617f37').update(new Buffer(req.rawBody, 'utf8')).digest('base64');
+  var hash = crypto.createHmac('SHA256', config.app.sharedSecret).update(new Buffer(req.rawBody, 'utf8')).digest('base64');
   if (hash == req.headers['x-shopify-hmac-sha256']) {
     req.knex('shops')
     .where('shop', '=', req.headers['x-shopify-shop-domain'])
